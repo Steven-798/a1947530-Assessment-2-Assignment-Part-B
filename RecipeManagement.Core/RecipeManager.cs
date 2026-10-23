@@ -211,8 +211,17 @@ public IReadOnlyList<Recipe> SearchByIngredient(string searchText)
         .ToList();
 }
 
-    public IReadOnlyList<Recipe> GetHighestProteinRecipes(int count) =>
-        throw new NotImplementedException();
+    public IReadOnlyList<Recipe> GetHighestProteinRecipes(int count)
+{
+    if (count <= 0)
+        return new List<Recipe>();
+
+    return _recipes.Values
+        .OrderByDescending(r => r.Nutrition?.ProteinG ?? 0)
+        .Take(count)
+        .ToList();
+}
+
     public bool AddSavedRecipe(int recipeId) =>
         throw new NotImplementedException();
     public bool RemoveSavedRecipe(int recipeId) =>
