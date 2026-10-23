@@ -191,10 +191,26 @@ public sealed class RecipeManager : IRecipeManager
     }
 
     // Part B 暂时不用做
-    public IReadOnlyList<Recipe> SearchByTitle(string searchText) =>
-        throw new NotImplementedException();
-    public IReadOnlyList<Recipe> SearchByIngredient(string searchText) =>
-        throw new NotImplementedException();
+    public IReadOnlyList<Recipe> SearchByTitle(string searchText)
+{
+    if (string.IsNullOrWhiteSpace(searchText))
+        return _recipes.Values.ToList();
+
+    return _recipes.Values
+        .Where(r => r.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+        .ToList();
+}
+
+public IReadOnlyList<Recipe> SearchByIngredient(string searchText)
+{
+    if (string.IsNullOrWhiteSpace(searchText))
+        return _recipes.Values.ToList();
+
+    return _recipes.Values
+        .Where(r => r.Ingredients.Any(i => i.Contains(searchText, StringComparison.OrdinalIgnoreCase)))
+        .ToList();
+}
+
     public IReadOnlyList<Recipe> GetHighestProteinRecipes(int count) =>
         throw new NotImplementedException();
     public bool AddSavedRecipe(int recipeId) =>
