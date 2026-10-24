@@ -7,6 +7,7 @@ namespace RecipeManagement.Core;
 public sealed class RecipeManager : IRecipeManager
 {
     private readonly Dictionary<int, Recipe> _recipes;
+    private readonly HashSet<int> _savedRecipes = new HashSet<int>();
     private readonly List<string> _shoppingList;
     private readonly LinkedList<int> _cookingPlan;
     private readonly Stack<int> _removedRecipes;
@@ -222,12 +223,27 @@ public IReadOnlyList<Recipe> SearchByIngredient(string searchText)
         .ToList();
 }
 
-    public bool AddSavedRecipe(int recipeId) =>
-        throw new NotImplementedException();
-    public bool RemoveSavedRecipe(int recipeId) =>
-        throw new NotImplementedException();
-    public bool IsRecipeSaved(int recipeId) =>
-        throw new NotImplementedException();
-    public IReadOnlyList<int> GetSavedRecipes() =>
-        throw new NotImplementedException();
+    public bool AddSavedRecipe(int recipeId)
+{
+    if (!_recipes.ContainsKey(recipeId))
+        return false;
+
+    return _savedRecipes.Add(recipeId);
+}
+
+public bool RemoveSavedRecipe(int recipeId)
+{
+    return _savedRecipes.Remove(recipeId);
+}
+
+public bool IsRecipeSaved(int recipeId)
+{
+    return _savedRecipes.Contains(recipeId);
+}
+
+public IReadOnlyList<int> GetSavedRecipes()
+{
+    return _savedRecipes.ToList();
+}
+
 }
