@@ -6,12 +6,12 @@ namespace RecipeManagement.Core;
 
 public sealed class RecipeManager : IRecipeManager
 {
-    private readonly Dictionary<int, Recipe> _recipes;
-    private readonly HashSet<int> _savedRecipes = new HashSet<int>();
-    private readonly List<string> _shoppingList;
-    private readonly LinkedList<int> _cookingPlan;
-    private readonly Stack<int> _removedRecipes;
-    private readonly Queue<string> _instructionQueue;
+    private readonly Dictionary<int, Recipe> _recipes; //目录
+    private readonly HashSet<int> _savedRecipes = new HashSet<int>(); //收藏
+    private readonly List<string> _shoppingList; //清单
+    private readonly LinkedList<int> _cookingPlan; //计划
+    private readonly Stack<int> _removedRecipes; //删除 后先
+    private readonly Queue<string> _instructionQueue;//做饭 先先
 
     private int jsoncount;
 
@@ -192,13 +192,13 @@ public sealed class RecipeManager : IRecipeManager
     }
 
     // Part B 暂时不用做
-    public IReadOnlyList<Recipe> SearchByTitle(string searchText)
+    public IReadOnlyList<Recipe> SearchByTitle(string searchText)  //
 {
     if (string.IsNullOrWhiteSpace(searchText))
         return _recipes.Values.ToList();
 
     return _recipes.Values
-        .Where(r => r.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+        .Where(r => r.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase)) //列表里任意一项命中就算
         .ToList();
 }
 
@@ -218,17 +218,17 @@ public IReadOnlyList<Recipe> SearchByIngredient(string searchText)
         return new List<Recipe>();
 
     return _recipes.Values
-        .OrderByDescending(r => r.Nutrition?.ProteinG ?? 0)
+        .OrderByDescending(r => r.Nutrition?.ProteinG ?? 0) //没营养的按0排最后
         .Take(count)
         .ToList();
 }
 
-    public bool AddSavedRecipe(int recipeId)
+    public bool AddSavedRecipe(int recipeId)  //
 {
-    if (!_recipes.ContainsKey(recipeId))
+    if (!_recipes.ContainsKey(recipeId)) //菜不存在
         return false;
 
-    return _savedRecipes.Add(recipeId);
+    return _savedRecipes.Add(recipeId); // 重复
 }
 
 public bool RemoveSavedRecipe(int recipeId)
